@@ -1,0 +1,22 @@
+# Specify which mammal packages are required (in which versions)
+
+- name:     some_awesome_package
+  version:  1.2.3
+  # no scope given, so the empty scope is used
+
+- name:     another_awesome_package
+  # version is not specified
+  scope:    dev   # only needed for development
+
+- name:     not_so_awesome_package
+  version:  > 1.0.0
+
+- name:     the_cow_package
+  version:  > 6.1.2, < 7.0.0  # only those work
+
+- name:     the_cow_package # some idiot also named his package "the_cow_package"
+  alias:    mooooo  # this package will be available as "mooooo".¹
+  source:   github.com/mammal/pi  # if not provided the available sources are tried
+
+
+# ¹: This is so one can handle name conflicts. That’s what it is for, nothing else!
