@@ -128,7 +128,7 @@ Sometimes you want to use something like the math expressions with an index. The
     # magnetization of the nail
     M_nail := 12.5"A/m"
 
-It is also useful to seperate two cammel cased expressions into one variable name.
+It is also useful to seperate two camel cased expressions into one variable name.
 
     helpFunction_frontendSystem := (topic) -> help('frontend: ' ∪ topic)
 

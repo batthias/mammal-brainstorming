@@ -3,9 +3,7 @@ Functions
 =========
 
 To create a function you can use the function type:
-    >>> func := <function> [`<int> x`, `<real> y: 2`],
-
-
+    >>> func := <function> :: [`<int> x`, `<real> y: 2`],
 
 
 Let us create a function
