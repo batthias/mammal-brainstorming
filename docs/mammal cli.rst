@@ -2,24 +2,24 @@
 The mammal CLI
 ==============
 
+The mammal CLI can be used to call stuff.
+
 Usage
 -----
 
 ::
-    mammal [-v <version>] <command> [<args>]
+    mammal [<general options>] <command> [<args>]
 
-With ``<version>`` you can specify which version of *mammal* to use,
-if there is more than one installed.
 These are common *mammal* commands used in various situations:
 
 * ``mammal <filepath> [<args>]``
     Run a *mammal script* (only works if the filename ends in ``.mm``).
+* ``mammal run <filepath|modulename> [<args>]``
+    Run a *mammal script* or a module.
 * ``mammal help [<topic>]``
     Show help for a certain topic (normally in a browser window)
 * ``mammal version``
     Show what version is used and which are installed.
-* ``mammal run <filepath|modulename> [<args>]``
-    Run a *mammal script* or a module.
 * ``mammal exec <code> [<args>]``
     Run some code in *mammal*.
 * ``mammal shell``
@@ -37,13 +37,19 @@ These are common *mammal* commands used in various situations:
 General options
 ---------------
 
-* ``-h``, ``--help``          Show general help. This is included for compatibility reasons.
+* ``-h``, ``-?``, ``--help``  Show general help. This is included for compatibility reasons.
                               Normally you should just use the more versatile ``help`` command.
-* ``-v``, ``--verbose``       Give more output. Option is additive, and can be used up to 3 times.
-* ``-q``, ``--quiet``         Give less output. Option is additive, and can be used up to 3 times
-                              (corresponding to WARNING, ERROR, and CRITICAL logging levels).
+* ``-v <version>``,
+  ``--version=<version>``     Use a specific version of the *mammal kernel*. With ``<version>`` you can specify which
+                              version of *mammal* to use, if there is more than one installed.
+                              It can either be a number (e.g. ``1.2``) or a version name (e.g. ``aardvark``).
+* ``-l <strategy>``,
+  ``--logging=<strategy>``    Give less or more output. The logging strategy name can be specified.
+                              Options allow for a more fine grained controll of what is logged
+                              and how.
 * ``-c <config>``,
-  ``--config=<config>``       Change some configuration options. Either a filename or a dictionary
+  ``--config=<config>``       Change some configuration options. Must be either the filename of a
+                              config file (e.g. ``myconfig.yml``)  or a yml style dictionary
                               (``{option1: value1, option2: value2}``) can be used.
 * ``--no-color``              Suppress colored output.
 
