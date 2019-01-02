@@ -1,0 +1,856 @@
+════════════════
+  Starting Out
+════════════════
+
+Ready, set, go!
+═══════════════
+
+**TODO:** replace apostrophes by proper ones.
+
+Alright, let's get started!
+If you're the sort of horrible person who doesn't read introductions to things and you skipped it,
+you might want to read the `last section in the introduction <Introduction.rst>` anyway because
+it explains what you need to follow this tutorial and how we're going to load functions.
+
+**TODO: Write this introduction and link to it.**
+
+The first thing we're going to do is run *Mammal*'s interactive mode and call some function to get
+a very basic feel for *Mammal*. Open your terminal and type in `mammal repl`.
+You will be greeted with something like this.
+
+.. code
+    Mammal, version "Aardvark" (0.0.1) REPL: http://www.mammal.org/repl/
+    do help() for help
+    Initializing jit-compiler ... loading package base ... done.
+    >>>
+
+Congratulations, you're in the
+*Mammal `REPL <http://en.wikipedia.org/wiki/Read–eval–print_loop>`_*!
+The prompt here is `➤`. If you don’t see that character your terminal doesn’t support unicode
+properly, so you should check `unicode troubleshooting <troubleshooting_unicode.rst>`_ for help.
+
+**TODO:** prompt is currently not `➤` in this document, since it isn't written in Unicode-Markdown yet.
+**TODO:** the prompt feature isn't really important for a beginner.
+If you want to change the prompt you can easily do so. For example you could want to number your
+inputs. To do so just type in `do repl.set_prompt("[{index}]: ")`.
+
+Here's some simple arithmetic.
+
+    >>> 2 + 15
+    17
+    >>> 49 · 100
+    4900
+    >>> 1892 − 1472
+    420
+    >>> 5 / 2
+    2.5
+    >>> 2 ^ 10
+    1024
+    >>> 6²
+    36
+
+This is pretty self-explanatory. We can also use several operators on one line and all the usual
+precedence rules are obeyed. We can use parentheses to make the precedence explicit or
+to change it.
+
+    >>> (50 · 100) - 4999
+    1
+    >>> 50 · 100 - 4999
+    1
+    >>> 50 · (100 - 4999)
+    -244950
+    >>> 5³ · -3
+    -375
+
+Pretty cool, huh? Yeah, I know it's not but bear with me.
+Other than most programming languages mammal uses the mathematical `⋅` instead of `*` —
+which is thus free for mathematical uses, such as the convolution operator (`f * g`).
+
+A little pitfall to watch out for here is negating numbers.
+The minus sign must directly precede the number, i.e. doing `5³ · - 3` would throw a syntax
+error.
+
+**Reasoning:** This way it is clear that the sign belongs to the number and you don't need to
+surround negative numbers with parentheses.
+
+**Style recommendation:** You can use `-` *(hyphen)* and `−` *(minus-sign)* interchangeably,
+but the recommendation is to *only use the hyphen* as the minus sign.
+
+Boolean algebra is also pretty straightforward.
+Just use the keywords `and`, `or`, `xor`, `not`.
+    >>> True and False
+    False
+    >>> True and True
+    True
+    >>> False or True
+    True
+    >>> True xor True
+    False
+    >>> not False
+    True
+    >>> not (True and True)
+    False
+
+The rarely used `xor` operator is used for *boolean exclusive or*.
+It works like `or` but returns `False` if both operands are true.
+
+By standard the symbols `∧`, `∨`, `¬` and `⊕` are not used, since they are easily
+confused with `^`, `v` and `-`.
+But you can import them from the `logic.operators` if you need them for some fancy math.
+
+    >>> import logic.operators : `∧`, `∨`, `¬`, `⊕`
+    >>> (True ∧ False) ∨ (True ⊕ ¬False)
+    False
+
+
+Testing for equality is also done in standard math notation.
+
+   >>> 5 = 5
+   True
+   >>> 1 = 0
+   False
+   >>> 5 ≠ 5
+   False
+   >>> 5 ≠ 4
+   True
+   >>> "hello" = "hel" ∪ "lo"
+   True
+
+What about doing `5 + "llama"` or `5 = True`?
+Well, if we try the first snippet, we get a big scary error message!
+
+    >>> 5 + "llama"
+    OperatorSupportError: `+` not defined for the type-combination `<int>`, `<str>`
+    Where:
+      in expression `5 + "llama"` at <repl>:1:0-9
+    Possible fixes:
+      • add a definition of `__apply_add__` to `<int>` that supports `<str>`
+      • add a definition of `__apply_add__` to `<str>` that supports `<int>`
+      • cast one of the operands to a matching type
+
+Yikes! What *Mammal* is telling us here is that `"llama"` is not a number and so it doesn't know
+how to add it to `5`. Even if it wasn't `"llama"` but `"four"` or `"4"`, Mammal still
+wouldn't consider it to be a number.
+
+**Reasoning:** Casting strings to numbers automatically leads to weird unexpected behaviour.
+Have a look at some of the problems PHP has if you don't believe me.
+
+`+` expects its left and right side to be numbers.
+If we tried to do `True = 5`, Mammal would tell us that the types don't match.
+Whereas `+` works only on things that are considered numbers, `=` works on any two things that
+can be compared. But the catch is that they both have to be the same type of thing.
+You can't compare apples and oranges. We'll take a closer look at types a bit later.
+
+*Note:* you can do `5 + 4.1` because integers (like `5`) can act like a rational number.
+`4.1` can't act like an integer, so `5` is the one that has to adapt.
+
+**TODO:** The wonderful world of numbers
+┏━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━┓
+┃ type             │ math     │ description          │ digital       │ examples     ┃
+┣━━━━━━━━━━━━━━━━━━┿━━━━━━━━━━┿━━━━━━━━━━━━━━━━━━━━━━┿━━━━━━━━━━━━━━━┿━━━━━━━━━━━━━━┫
+┃ `<complex>`      │ ℂ        │ complex numbers      │ not really    │ 1i 3+6i √-2  ┃
+┠──────────────────┿──────────┿──────────────────────┿───────────────┿──────────────┨
+┃ `<real>`         │ ℝ        │ real numbers         │ not really    │ π e √5       ┃
+┠──────────────────┿──────────┿──────────────────────┿───────────────┿──────────────┨
+┃ `<rational>`     │ ℚ        │ the rational numbers │ if not to big │ 1/3, 0.2     ┃
+┠──────────────────┿──────────┿──────────────────────┿───────────────┿──────────────┨
+┃ `<int>`          │ ℤ        │ integer number       │               │              ┃
+┠──────────────────┿──────────┿──────────────────────┿───────────────┿──────────────┨
+┃ `<float>`        │          │ floating point       │ 32,64,128 bit │ 1.25         ┃
+┠──────────────────┿──────────┿──────────────────────┿───────────────┿──────────────┨
+┃ `<int64>`        │ ℤ/(2⁶⁴ℤ) │ small enough int     │ 64 bit        │ 123456       ┃
+┗━━━━━━━━━━━━━━━━━━┷━━━━━━━━━━┷━━━━━━━━━━━━━━━━━━━━━━┷━━━━━━━━━━━━━━━┷━━━━━━━━━━━━━━┛
+
+**TODO:** Do not put `<int64>` in the table, since it is kind of weird. Maybe even
+          remove the `<float>` too, since it is also not very mathematical.
+
+Mammal will try to fit a given number in the smallest number class that it can.
+`5` could be considered a real number, but it also fits into integers, so it will be an integer.
+1.3 is a rational number. You can cast it to a float, but then it won't be
+precisely 1.3 anymore. A binary float (which computers use) can't actually represent
+this number exactly.
+
+You can explicitly use a 64 bit integer but mostly shouldn't. Those hardware near
+types are for optimization purposes or API compatibilities. The compiler should optimize integers
+to use only fast memory efficient operations, when your numbers are small enough.
+
+
+Functions
+═════════
+
+You may not have realised it but we've been using functions now all along.
+For instance, `·` is an operator which calls the `multiply` function, that takes two numbers
+and multiplies them. As you've seen, we call it by sandwiching the operator between the arguments.
+This is what we call a binary operator. Most functions don’t have an associated operator,
+but can only be called as *prefix functions*. Let's take a look at those.
+
+In most programming languages (and mathematics) functions are called by writing the function name
+and then writing its parameters in parentheses, usually separated by commas.
+That is exactly how *Mammal* does it, since it tries to emulate math-notation wherever feasible.
+
+    >>> sin(π+π) + cos(π-π)
+    1.0
+
+The `sin` and `cos` functions are *sine* and *cosine* like you would expect.
+They work for real and complex numbers and also square matrices.
+
+Calling a function with several parameters is also simple.
+The function `choose` takes two numbers and returns the binomial coefficient of the two.
+See for yourself:
+
+    >>> import combinatorics : choose
+    >>> choose(49, 6)
+    13983816
+    >>> choose(365, 4)
+    8038030
+
+**TODO:** If writing choose at the beginning seems weird to you just import the `choose` operator.
+
+    >>> import combinatorics : `{} choose {}`
+    >>> 49 choose 6
+    13983816
+
+By the way: the first one is your chances in winning the lottery and the second one is picking
+four strangers at random which all have the same birthday.
+
+People coming from Haskell (from which *Mammal* heavily borrows concepts) will miss the
+ability of calling functions without all this brackety nonsense.
+Don't fret you can use functions without brackets!
+Just separate function and arguments with a space. Otherwise it is completely the same.
+
+    >>> sin π + cos π
+    1.0
+    >>> choose 49, 6
+    13983816
+
+As you see both notations are quite common in mathematics. In many cases putting
+brackets around a single argument increases readability though.
+Using multi argument functions without brackets is often not that easily readable though.
+
+Some rules are required so there aren't two ways of writing stuff.
+* use `sin(x) + 5` instead of `(sin x) + 5`
+* use `cos(x + π)` instead of `cos (x + π)`
+* you can use `sin cos x` or `sin(cos(x))` or `(sin ∘ cos)(x)`.
+  I like the first one best in this case but often the third one is nicest.
+* use `f (1,2,3)` instead of `f((1,2,3))`
+
+In those examples I also snuck in the function concatenation operator `∘`.
+
+Line-breaks and indentation can be used instead of brackets and commas.
+
+**Reasoning:** In many cases this makes it easier to read. Your editor should be able to
+convert between the notation styles.
+
+Assume you want to use `sin(cos(tan(3·(4 + cos(5))) - 6))`.
+This isn't really readable. Lets break this down into smaller pieces, each on its own line.
+
+    >>> sin cos(
+    >>>     cos
+    >>>         3 · (4 + cos 5)
+    >>>     - 6
+    >>> )
+    -0.7438332696…
+
+Note that the brackets after the first `cos` are necessary. If you left them out, *Mammal*
+would assume `- 6` to be a second argument to `cos`, so it would raise an error.
+Or lets write our choose in a convoluted way.
+
+    >>> choose
+    >>>     7 · (3 + 2²)
+    >>>     1 + 2 + 3
+    13983816
+
+Still readable, right?
+
+
+Baby’s first own functions
+==========================
+
+**TODO:** Show how to define constants before doing this.
+
+In the previous section we got a basic feel for calling functions.
+Now let's try making our own! Open up your favourite text editor — which supports unicode,
+otherwise get a `new one <http://atom.io>`_ — and punch in this function that takes a number
+and multiplies it by two.
+
+    >>> doubleMe := (x) -> x + x
+
+Functions are defined in a similar way as constants are.
+The function arguments are in brackets separated by commas.
+After the *maps to* operator `->` we define what the function does.
+Save this as `baby.mm`. Now navigate to where it's saved and run `mammal repl` from there.
+Once inside the *Mammal REPL*, do `import baby : doubleMe`.
+Now that the function we defined is imported, we can play with it.
+
+    >>> import baby : doubleMe
+    >>> doubleMe(9)
+    18
+    >>> doubleMe(8.3)
+    16.6
+
+Because `+` works on integers as well as on rational numbers
+(anything that can be considered a number, really), our function also works on any number.
+Let's make a function that takes two numbers and multiplies
+each by two and then adds them together.
+
+    >>> doubleUs := (x, y) -> x·2 + y·2
+
+Simple. We could have also defined it as `(x, y) -> x + x + y + y`.
+Testing it out produces pretty predictable results.
+To do so append this function to the `baby.mm` file, save it and then do `do repl.reload()`
+in the REPL.
+
+    >>> doubleUs(4, 9)
+    26
+    >>> doubleUs(2.3, 34.2)
+    73.0
+    >>> doubleUs(28, 88) + doubleMe(123)
+    478
+
+As expected, you can call your own functions from other functions that you made.
+With that in mind, we could redefine `doubleUs` like this:
+
+    >>> doubleUs := (x, y) -> doubleMe(x) + doubleMe(y)
+
+This is a very simple example of a common pattern you will see throughout Mammal.
+Making basic functions that are obviously correct — still test them though — and then combining
+them into more complex functions. This way you also avoid repetition.
+What if some mathematicians figured out that `2` is actually `3` and you had
+to change your program? You could just redefine `doubleMe` to be `x + x + x`
+and since `doubleUs` calls `doubleMe`, it would automatically work in this
+strange new world where `2` is `3`.
+
+Functions in Mammal don't have to be in any particular order,
+so it doesn't matter if you define `doubleMe` first and then `doubleUs` or
+if you do it the other way around.
+
+**Style:** You should probably define `doubleMe` first since it is a more “basic”
+function. Define your “building blocks” first and later add the more complex functions
+which call them.
+
+Now we're going to make a function that multiplies a number by `2` but only if that
+number is smaller than or equal to `100` because numbers bigger than `100` are
+big enough as it is!
+
+    >>> doubleSmallNumber := (x) ->
+    >>>     if x > 100 : x
+    >>>     else       : x·2
+
+Right here we introduced Mammals *if expression*. You're probably familiar with
+*if statements* from other languages.
+The difference between the *if expression* and *if statements* is that the
+`else` part is mandatory and only one expression per case is allowed leading to
+a new expression. An expression is basically a piece of code that returns a value.
+`5` is an expression because it returns 5, `4 + 8` is an expression,
+`x + y` is an expression because it returns the sum of `x` and `y`.
+Because the `else` is present and in both cases an expression is returned,
+the *if expression* will always return something and that's why it's an expression.
+
+If we wanted to add one to every number that's produced in our previous function,
+we could have written its body like this.
+
+    >>> doubleSmallNumberPlusOne := (x) -> (if x > 100 : x else : x·2) + 1
+
+
+An intro to lists
+═════════════════
+
+Much like shopping lists in the real world, lists (or tuples) in *Mammal* are very useful.
+It is the most used data structure and it can be used in a multitude of different ways to model
+and solve a whole bunch of problems. Lists are **so** awesome.
+In this section we‘ll look at the basics of lists,
+strings (which behave pretty much like lists) and list comprehensions.
+
+In Mammal, lists are a *heterogenous* data structure. It stores several elements of any type.
+That means that we can have a list that has a few integers and
+then a few characters and so on. And now, a list!
+
+    >>> mixedList := (1, 2, "a", 3, "b", "c", 4)
+    >>> anotherList := [1, 1+2, (1+2)·3, ((1+2)·3)⁴]
+    >>> lostNumbers := (4, 8, 15, 16, 23, 42)
+    >>> lostNumbers
+    4, 8, 15, 16, 23, 42
+
+**Tip:** You can specify that a list can only contain elements of a certain type.
+See `some_chapter`_ for details about types.
+
+As you can see, lists are denoted by parentheses or square brackets, with the values in the lists
+being separated by commas.
+
+**Reasoning:** Allowing both brackets often increases readability.
+
+Strings mostly just behave like lists of characters, as we will see in the examples.
+A common task is putting two lists together. This is done by using the `∪` operator.
+
+    >>> (1, 2, 3, 4) ∪ (9, 10, 11, 12)
+    1, 2, 3, 4, 9, 10, 11, 12
+    >>> "hello" ∪ " " ∪ "world"
+    "hello world"
+
+**Note:** `()`, `((),)` and `((),(),())` are all different things.
+          The first one is an empty list, the seconds one is a list that contains
+          one empty list, the third one is a list that contains three empty lists.
+          In the second example you can see a trailing comma. This is necessary since
+          otherwise *Mammal* will assume the outer brackets are just ... well brackets.
+
+If you want to get an element out of a list by index use `[idx]`.
+The indices start at `1`, as is customary in mathematics.
+I know this is a pain for all of you who already know another language with zero based indices
+— I am among this group — but the alternative would infuriate the mathematicians.
+
+    >>> "Steve Buscemi"[7]
+    "B"
+    >>> (9.4, 33.2, 96.2, 11.2, 23.25)[2]
+    33.2
+
+But if you try to get the sixth element from a list that only has four elements, you‘ll get an
+error so be careful!
+You can also use indices from the end of the list, by using the `$` symbol which represents the
+length of the list.
+
+    >>> (9.4, 33.2, 96.2, 11.2, 23.25)[$-1]
+    11.2
+    >>> "racecar"[3]
+    "c"
+    >>> "racecar"[$-3]
+    "e"
+
+
+
+Lists can also contain other lists. They can also contain lists that contain lists that contain lists …
+
+    >>> b := [(1,2,3,4), (5,3,3,3), (1,2,"2½",3,4), (1,2,3)]
+    >>> b
+    (1, 2, 3, 4), (5, 3, 3, 3), (1, 2, "2½", 3, 4), (1, 2, 3)
+    >>> b ∪ [(1,1,1,1),]
+    (1, 2, 3, 4), (5, 3, 3, 3), (1, 2, "2½", 3, 4), (1, 2, 3), (1, 1, 1, 1)
+    >>> b.prepend (6,6,6)
+    (6, 6, 6), (1, 2, 3, 4), (5, 3, 3, 3), (1, 2, "2½", 3, 4), (1, 2, 3)
+    >>> b[3]
+    1, 2, "2½", 3, 4
+
+The lists within a list can be of different lengths and types.
+
+**TODO:** Move this somewhere useful.
+Lists can't be compared with `<`, `≤`, `>` and `≥`, since there is no unique way of
+comparing them. So you cant for example do `(0, 4, 8, 0) < (1, 2, 3)`.
+One could compare those lists in lexicographical order, element wise, by length etc.
+So you just have to choose one of those ways explicitly.
+
+    >>> [(0,4,8), (1,2,3)].allMatch (a,b) -> a > b
+    False
+    >>> [(0,4,8), (1,2,3)].anyMatch (a,b) -> a < b
+    True
+    >>> lexOrder [0,4,8], [1,2,3]
+    1, 2
+    >>> lexOrder "ABDUL", "ABBA"
+    2, 1
+
+
+But what happens if we try to get the first element of an empty list?
+
+    >>> myList := ()
+    >>> myList[1]
+    IndexError: list `()` has no element at index `1`.
+    Where:
+      in expression `myList[1]` at <repl>:1:0-5
+    Possible fixes:
+      • check whether your index is in the range of `myList` before trying to get it
+      • use a try-catch-block to catch the error and use some default if an `IndexError` is raised
+      • use the existential operator `?`
+
+Oh my! It all blows up in our face! You cannot access elements that do not exist.
+The message already suggests three different solutions for the problem.
+Let us take a look at each of them.
+
+We can check whether the list is long enough beforehand.
+
+    >>> myList := ()
+    >>> if myList.len > 0 : myList[1]
+    >>> else              : None
+    None
+
+`None` is generally used to signify a missing value.
+
+Alternatively we can just try to get the element and if this fails we do something else.
+
+    >>> myList := ()
+    >>> try            : myList[1]
+    >>> catch KeyError : None
+    None
+
+Those two ways do basically the same and both are pretty verbose. This is a good thing most of
+the time, but sometimes this is too clunky. The the *existential operator* comes to the rescue.
+
+    >>> myList := ()
+    >>> myList[1]?
+    None
+
+The existential operator for indexing is a questionmark directy after the `]` bracket.
+The expression will return the first element or — if that doesn't exist — `None`.
+If you wanted something else but `None` the `?` supports an optional `else` part.
+
+    >>> myList := ()
+    >>> myList[1]? else "empty"
+    "empty"
+
+By the way, we introduced the `len` property of lists.
+Let‘s do some more stuff with our lists:
+
+Another useful method is `reverse`. Guess what it does.
+
+    >>> [5,4,3,2,1].reverse()
+    1, 2, 3, 4, 5
+
+`<list>.max` takes a list of stuff that can be put in some kind of order and returns
+the biggest element. `<list>.min` works in the same way but returns the smallest element.
+
+    >>> [8,4,2,1,5,6].min()
+    1
+    >>> [1,9,2,3,4].max()
+    9
+
+`<list>.sum` takes a list and returns the sum of the elements. Its elements must be addible
+for this to work of course. `<list>.product` works the same for the product.
+
+    >>> [5,2,1,6,3,2,5,7].sum()
+    31
+    >>> [6,2,1,2].product()
+    24
+    >>> [1,2,5,6,7,9,2,0].product()
+    0
+
+The `in` keyword takes a thing and a list of things and tells us if that thing is an element
+of the list.
+
+    >>> 4 in (3,4,5,6)
+    True
+    >>> 10 in (3,4,5,6)
+    False
+
+Those were a few basic functions that operate on lists.
+We‘ll take a look at more list functions later.
+
+
+
+**TODO:** Insert the part about ranges.
+
+
+Slicing of lists
+════════════════
+
+In many cases you will want more than one, but not all of the elements of a list.
+In this case slicing comes into play.
+
+    >>> list := [5,4,3,2,1]
+    >>> list[1…3]
+    5, 4, 3
+    >>> list[2…]
+    (4,3,2,1)
+    >>> list[5…2]
+    ()
+
+See how if we give a range which contains no indices, it just returns an empty list.
+
+We could by the way have left out the start index `1` in `1…3`.
+`1…3` means “indices 1 to 3”, while `…3` means “all indices up to (and including) 3”, which
+is the same.
+
+What if the elements I want are not all following each other? No problem, just use `,`:
+
+    >>> list[2,5]
+    4, 1
+    >>> k := 4
+    >>> list[1 … k-1, k+1 … $]
+    5, 4, 3, 1
+
+This last one is something you have probably seen in math a lot.
+Both the `1` and the `$` can be left out though.
+
+
+**TODO:** do something here
+
+Just a friendly reminder: because strings behave like lists, we can use list comprehensions
+to process and produce strings.
+Here's a function that takes a string and removes everything except uppercase letters from it.
+
+    >>> removeNonUppercase := (str) -> (c for c in str if c in ("A":"Z"))
+
+Testing it out:
+
+    >>> removeNonUppercase "Hahaha! Ahahaha!"
+    "HA"  
+    >>> removeNonUppercase "IdontLIKEFROGS"
+    "ILIKEFROGS"
+
+The predicate here does all the work. It says that the character will be included in the new
+list only if it's an element of the string `"A"…"Z"`.
+Nested list comprehensions are also possible if you're operating on lists that contain
+lists. A list contains several lists of numbers. Let's remove all odd numbers without
+flattening the list.
+
+    >>> xxs := <list>
+    >>>    [1,3,5,2,3,1,2,4,5]
+    >>>    [1,2,3,4,5,6,7,8,9]
+    >>>    [1,2,4,2,1,6,3,1,3,2,3,6]
+    >>> [
+    >>>   [ x for x in xs if x mod 2 = 0 ]
+    >>>   for xs in xxs
+    >>> ]
+    [2, 2, 4],  [2, 4, 6, 8],  [2, 4, 2, 6, 2, 6]
+
+You can write list comprehensions across several lines. So it's better to split longer list
+comprehensions across multiple lines, especially if they're nested.
+
+
+Tuples
+══════
+
+**TODO:** since lists and tuples are combined this has to probably be kind of rewritten.
+
+In some cases you want to have lists of fixed length.
+When you know exactly how many values you want to combine you can specify the type in that way.
+
+    >>> <[int, str, int]> tuple := (1, "two", 3)
+
+As we can see here is that they don't have to be homogenous and can contain a combination of
+several types - which ones you can specify in the type declaration.
+
+Think about how we'd represent a two-dimensional vector in *Mammal*.
+So we want to put a couple of vectors in a list to represent points of a shape on a
+two-dimensional plane.
+We can do something like `[(1,2), (8,11), (4,5)]`. Without a type declaration we now have the
+problem that we can also create stuff like `[[1,2],[8,11,5],[4,5]]`, which *Mammal* has no
+problem with since it's still a valid list of lists, but it kind of doesn't make sense.
+But a list of fixed size two (also called a pair) is its own type, so let's use a type declaration
+to enforce that instead.
+
+    >>> <[[int²]]> points := [(1,2), (8,11), (4,5)]
+
+What if we tried to assign a misshaped list? Well, we'd get this error:
+
+**TODO:** What does the error message actually look like.
+
+    >>> <[[int²]]> points := [(1,2), (8,11,5), (4,5)]
+    TypeError: Assigned expression doesn't match the expected type.
+    Expected type: `<[[int²]]>`
+    Inferred type: `<[[int]]>`
+    In the expression: `[(1,2), (8,11,5), (4,5)]`
+    the second element `(8,11,5)` is not of type `<[int²]>`.
+    In the definition of `<[[int²]]> points := [(1,2), (8,11,5), (4,5)]`  
+
+It's telling us that we tried to use a triple in the a list that only allows pairs.
+
+Use fixed length lists (aka tuples) when you know in advance how many components some piece of
+data should have.
+
+A cool function that produces a list of pairs: `zip`. It takes two lists and then zips them
+together into one list by joining the matching elements into pairs. It's a really simple function
+but it has loads of uses. It's especially useful for when you want to combine two lists in a way
+or traverse two lists simultaneously. Here's a demonstration.
+
+    >>> zip [1,2,3,4,5], [5,5,5,5,5]  
+    [1, 5], [2, 5], [3, 5], [4, 5], [5, 5]
+    >>> zip [1…5], ["one", "two", "three", "four", "five"]
+    [1, "one"], [2, "two"], [3, "three"], [4, "four"], [5, "five"]  
+
+It pairs up the elements and produces a new list. The first element goes with the first,
+the second with the second, etc. But what happens if the lengths of the lists don't match?
+
+    >>> zip [5,3,2,6,2,7,2,5,4,6,6], ["I'm", "a", "turtle"]
+    IndexError: The two arguments of `zip` need to have the same length.
+    Where:
+      in expression `zip [5,3,2,6,2,7,2,5,4,6,6], ["I'm", "a", "turtle"]` at <repl>:1:0-9
+    Expected:
+      `[5,3,2,6,2,7,2,5,4,6,6]` with length 11
+      to have the same length as `["I'm", "a", "turtle"]` with length 3.
+    Possible fixes:
+      • add a the optional `cut: True` keyword argument to cut to the shorter list
+      • use lists of the same length
+
+So this gives an error. But it does suggest a solution you might want to use: the `cut` argument.
+
+    >>> zip [5,3,2,6,2,7,2,5,4,6,6], ["I'm", "a", "turtle"], cut: True
+    (5, "I'm"),(3, "a"),(2, "turtle")
+
+The longer list simply gets cut off to match the length of the shorter one.
+Because *Mammal* is lazy, we can zip finite lists with infinite lists:
+
+    >>> zip [1…] ["apple", "orange", "cherry", "mango"], cut: True
+    [1, "apple"], [2, "orange"], [3, "cherry"], [4, "mango"]
+
+Here's a problem that combines tuples and list comprehensions: which right triangle that has
+integers for all sides and all sides equal to or smaller than 10 has a perimeter of 24?
+First, let's try generating all triangles with sides equal to or smaller than 10:
+
+    >>> triangles := [ (a,b,c) for c in [1…10] for b in [1…10] for a in [1…10] ]
+
+We're just drawing from three lists and our output function is combining them into a triple —
+you could also use `triangles := setΠ(*[[1…10]].cycle(3)` for this.
+If you evaluate that by typing out triangles in the *REPL*, you'll get a list of all possible
+triangles with sides under or equal to 10. Next, we'll add a condition that they all have
+to be right triangles. We'll also modify this function by taking into consideration that
+side `b` isn't larger than the hypothenuse and that side `a` isn't larger than side `b`.
+
+    >>> rightTriangles := [ (a,b,c)
+    >>>     for c in [1…10]
+    >>>     for b in [1…c]
+    >>>     for a in [1…b]
+    >>>     if a² + b² = c²
+    >>> ]
+
+We're almost done. Now, we just modify the function by saying that we want the ones where
+the perimeter is 24.
+
+    >>> rightTriangles24 := [ (a,b,c)
+    >>>     for c in [1…10]
+    >>>     for b in [1…c]
+    >>>     for a in [1…b]
+    >>>     if a² + b² = c² and a+b+c = 24
+    >>> ]
+
+And there's our answer! This is a common pattern in functional programming.
+You take a starting set of solutions and then you apply transformations to those solutions
+and filter them until you get the right ones.
+
+
+
+═════════════════════
+Types and Typeclasses
+═════════════════════
+
+Believe the type
+════════════════
+
+Previously we mentioned that *Mammal* has a static type system —
+although there are multi-type variables, but those still have a type.
+The type of every expression is known at compile time, which leads to safer code.
+If you write a program where you try to divide a boolean type with some number,
+it won't even compile. That's good because it's better to catch such errors at compile time
+instead of having your program crash. Everything in *Mammal* has a type, so the compiler can
+reason quite a lot about your program before compiling it. It can also make optimizations based
+on those types which make your programs faster.
+
+Unlike Java or Pascal — and much like Haskell — *Mammal* has type inference.
+If we write a number, we don't have to tell *Mammal* it's a number. It can infer that on its own,
+so we don't have to explicitly write out the types of our functions and expressions to get
+things done — you should add them to functions you export though.
+We covered some of the basics of *Mammal* with only a very superficial glance at types.
+However, understanding the type system is a very important part of learning *Mammal*.
+
+A type is a kind of label that every expression has. It tells us in which category of things
+that expression fits. The expression `True` is a *boolean*, `"hello"` is a *string*, etc.
+
+Now we'll use the *Mammal REPL* to examine the types of some expressions. We'll do that by
+using the `type` function which, followed by any valid expression, tells us its type.
+Let's give it a whirl.
+
+    >>> type "a"
+    <char>
+    >>> type True
+    <bool>
+    >>> type "HELLO!"
+    <str>
+    >>> type [True, "a"]
+    <[bool,char]>
+    >>> type (4 = 5)
+    <bool>
+
+Here we see that calling `type` on an expression returns its type.
+Types are always in typewriter-style angle brackets (`<` and `>`).
+They names are generally lowercase.
+`"a"`, as it would seem, has a type of `<char>`. It's not hard to conclude that it stands for
+character — it is a special case of the `<str>` type, that is used if the string only consists
+of one character. Examining the type of `"HELLO!"` yields `<str>` as expected.
+The square brackets in `<[bool,char]>` denote a list. So we read that as it being a list
+with two elements, the first being of type `<bool>` the second one of type `<char>`.
+`4 = 5` will always return `False`, so its type is `<bool>`.
+
+Functions also have types. When writing our own functions, we can choose to give them an explicit
+type declaration. This is generally considered to be good practice — and even necessary to
+publish them as part of a package. From here on, we'll give all the functions that we make type
+declarations. Remember the list comprehension we made previously that filters a string so that
+only caps remain? Here's how it looks like with a type declaration.
+
+    >>> removeNonUppercase := (<str> str) -> <str>
+    >>>     [ c for c in str if c in ('A'…'Z') ]
+
+`removeNonUppercase` has a type of `<str→str>`, meaning that it maps from a string to a string.
+That's because it takes one string as a parameter and returns another as a result.
+We didn't have to give this function a type declaration because the compiler can infer by itself
+that it's a function from a string to a string but we did anyway. But how do we write out the
+type of a function that takes several parameters?
+Here's a simple function that takes three integers and adds them together:
+
+    >>> addThree := (<int> x, <int> y, <int> z) -> <int> x + y + z
+
+This way of writing types unfortunately becomes kind of hard to read rather fast.
+So for many parameters and/or complicated types one puts this information into
+`docstrings <docstrings.umd>`_
+
+If you want to give your function a type declaration but are unsure as to what it should be,
+you can always just write the function without it and then check it with `type function`.
+Functions are expressions too, so `type` works on them without a problem.
+
+Here's an overview of some common types.
+
+**`<int>`** stands for integer. It's used for whole numbers. `7` can be an `<int>`
+    but `7.2` cannot. `<int>` is not bounded by a minimum and maximum value so it can be used to
+    represent really really big numbers. I mean like really big, the only limit is that it has to
+    fit into your computers memory — which is pretty big nowadays.
+    If you use numbers smaller than 2⁶³ calculations are however, much more efficient
+    than for bigger numbers.
+
+    >>> factorial := (<int> n) = <int> [1…n].product()
+    >>> factorial 50 = 50!
+    True
+    >>> factorial 50
+    30414093201713378043612608166064768844377641568960512000000000000
+
+**`<rational>`** is a rational number. It is precise, so no rounding errors here.
+
+**`<real>`** is a real number. It is also precise, but kind of slow. One example would be
+    the number `π`. Slightly problematic is that almost all real numbers cannot be represented
+    by a computer.
+
+**`<bool>`** is a boolean. It can only have two values: `True` and `False`.
+
+**`<str>`** represents a string of characters.
+
+**`<char>`** is a string with only 1 character. It has some extra functions which longer
+    strings don't have.
+
+**`<list>`** is the general type for lists. But mostly you use subtypes for fixed length lists,
+    as well as different types for different components,
+    so there is theoretically an infinite number of list types.
+
+    *TODO:* Explain list types
+
+
+
+Type variables
+══════════════
+
+What do you think is the type of the following function?
+
+    >>> head := (xs) -> xs[1]
+
+Because `head` takes a list of any type and returns the first element,
+so what could it be? Let's check!
+
+    >>> type head
+    <[a] → a>
+
+Hmmm! What is this `a`? Is it a type? It consists of only one letter so it's actually
+a type variable! That means that `a` can represent any type. This is much like generics
+in other languages, only in *Mammal* it's much more powerful because it allows us to easily write
+very general functions if they don't use any specific behavior of the types in them.
+Functions that have type variables are called polymorphic functions.
+The type declaration of `head` states that it takes a list of any type and returns one
+element of that type.
+
+Type variables are written using the letters `a`, `b`, `c`, `d` and `e`.
+If you need more than 5 type variables you need to use names like `t_yourVariableNameHere`,
+which are also always type variables.
+
+    >>> type fst
