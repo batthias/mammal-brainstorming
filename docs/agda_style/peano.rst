@@ -14,9 +14,9 @@ So, unlike the previous chapter, this chapter will actually involve some coding 
 We start by creating a ``tutorial`` folder and inside a ``peano.mm`` file.
 First add the *module docstring*::
     #!mammal -v aardvark
-    """`peano` module.
+    """`peano` module -- define the natural numbers yourself.
 
-    A simple example module to get you startet with *Mammal*.
+    A simple example module to get you started with *Mammal*.
 
     Author:  LYaMammal Tutorial
     """
@@ -124,7 +124,7 @@ constructor ``suc`` like so::
 
 **TODO:** Here we see that mammal still needs some work.
 We want to define a set which contains an element named ``zero``, which should probably be
-accessible via ``<ℕ.zero>`` and a function ``suc`` which should be accessible via ``suc n``
+accessible via ``ℕ.zero`` and a function ``suc`` which should be accessible via ``suc n``
 for ``n`` in ``ℕ``. To define things I want to use the ``:=`` operator I think.
 
 
@@ -150,7 +150,7 @@ One, Two.. Five!
 
 Now we’re going to define some arithmetic operations on our natural numbers.
 Let’s try addition, first. ::
-    def `+` : (ℕ × ℕ) → ℕ
+    `+` := (ℕ × ℕ) → ℕ
 
 Here I’m declaring a function. To start with, I give it a type — it takes two natural numbers,
 and returns a natural number.

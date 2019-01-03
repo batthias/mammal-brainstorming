@@ -2,6 +2,8 @@
 Functions
 =========
 
+**TODO:** Update once the syntax is clear(er)
+
 To create a function you can use the function type:
     >>> func := <function> :: [`<int> x`, `<real> y: 2`],
 

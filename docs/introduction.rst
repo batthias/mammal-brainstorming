@@ -2,20 +2,23 @@
 mammal [❏ aardvark]
 ===================
 
-... is a semi-functional programing language for mathematics and other
-scientific computing. The basic concept idea is a python-like language,
-which does not have mutability and is more flexible with regard to adding
-new operators and functionality.
+... is a functional programming language originally designed for mathematics
+and other scientific computing. The basic concept idea is a python-like
+language, which does not have mutability and is more flexible with regard to
+adding new operators and functionality.
 
 The primary use will be a just-in-time-compiler, that compiles and runs code
-from the command line or files. The runtime-environment has to be installed
-to achieve this.
+from the command line or files. As runtime-environment either the
+JVM (device independent) or the CPU/GPU itself (fast) can be used.
 
-[☞ file_structure.rst](next: file structure)
+[☞ next: Installation <installation.rst>]
 
 ------------------------------------------------------------------------------
 
-Graphics (❏):
+Graphics  [❏ name]
     aardvark:  img/aardvark.svg
 
-References (☞):
+References [☞ text <url>]
+
+**TODO:** use even more unicode in RST, e.g.
+          replace brackets and lines by their unicode versions

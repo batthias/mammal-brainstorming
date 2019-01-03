@@ -12,7 +12,8 @@ Behave pretty much as described in the YAML specs.
 Block collections use indentation for scope and begin each entry on its own line.
 Block sequences indicate each entry with a dash and space (``- ``).
 Mappings use a colon and space (``: ``) to mark each key-value pair.
-Comments begin with an octothorpe (also called a *“hash”*, *“sharp”*, *“pound”*, or *“number sign”* - ``#``).
+Comments begin with an octothorp (also called a *“hash”*, *“sharp”*, *“pound”*,
+or *“number sign”* - ``#``).
 
 Understanding this by example is easier. Here is one for a sequence::
     - Mark McGwire
@@ -62,7 +63,7 @@ In a similar manner, the flow mapping uses curly braces::
     Sammy Sosa: {
         hr: 63,
         avg: 0.288
-      }
+    }
 
 Additionally the feature ``set-support`` can be turned on.
 Then mappings without keywords (i.e. *sets*) are supported::

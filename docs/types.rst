@@ -1,6 +1,8 @@
 Some sample types
 =================
 
+**TODO:** some of those will probably have to be changed a little
+
 ========================  ==============================================================================
   Type expression            Description
 ========================  ==============================================================================
@@ -27,7 +29,7 @@ Some sample types
 ``<list(int)>``           list of integers
 ``<[int]>``               shorthand
 ``<list(str,int)>``       list with two elements, first a string, then an integer
-``<[str,int]>``           shorthand (and so on, you get the jist)
+``<[str,int]>``           shorthand (and so on, you get the gist)
 ``<[2…3 str]>``           string list with two or three elements
 ``<{int}>``               set of integers
 ``<{4 str}>``             set of four strings
